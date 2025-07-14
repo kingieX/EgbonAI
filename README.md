@@ -29,3 +29,29 @@
 ---
 
 ## 📁 Folder Structure
+
+/src
+/app → Pages (App Router + API routes)
+/components → UI components (Navbar, ThemeToggle, etc.)
+/lib → SQLite DB setup, Gemini integration
+/types → Shared TS types
+/data → sentiments.db SQLite file
+
+---
+
+## ⚙️ Setup Instructions
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/yourusername/sentinaija.git
+cd sentinaija
+
+# 2. Install dependencies
+npm install
+
+# 3. Add your Gemini API key
+echo "GEMINI_API_KEY=your-key-here" > .env.local
+
+# 4. Run the dev server
+npm run dev
+```

@@ -2,13 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+// import Navbar from "@/components/Navbar";
+// import Footer from "@/components/Footer";
 
 export default function SignupPage() {
   const router = useRouter();
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -17,6 +18,7 @@ export default function SignupPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
     try {
       const res = await fetch("/api/signup", {
         method: "POST",
@@ -29,16 +31,20 @@ export default function SignupPage() {
         setError(data.error || "Signup failed");
       } else {
         localStorage.setItem("userId", data.userId);
+                localStorage.setItem("userEmail", data.email || form.email);
         router.push("/");
       }
-    } catch {
+    } catch (err) {
+      console.error("Signup error:", err);
       setError("Server error");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <main className="min-h-screen flex items-center justify-center bg-background text-foreground px-4">
         <div className="w-full max-w-md p-6 bg-card text-card-foreground border border-border rounded-lg shadow-md">
           <h2 className="text-2xl font-bold mb-6 text-center">
@@ -69,14 +75,16 @@ export default function SignupPage() {
             {error && <p className="text-destructive text-sm">{error}</p>}
             <button
               type="submit"
-              className="w-full bg-primary text-primary-foreground py-2 rounded font-semibold hover:opacity-90 transition"
+              className="w-full bg-primary text-primary-foreground py-2 rounded font-semibold hover:opacity-70 disabled:opacity-70 transition"
+              disabled={!form.name || !form.email || !form.password || loading}
             >
-              Sign Up
+              {/* Sign Up */}
+              {loading ? "signing up..." : "Sign Up"}
             </button>
           </form>
         </div>
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

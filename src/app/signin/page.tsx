@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import ThemeButton from "@/components/ThemeButton";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+// import Navbar from "@/components/Navbar";
+// import Footer from "@/components/Footer";
 
 export default function SigninPage() {
   const router = useRouter();
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -18,6 +18,7 @@ export default function SigninPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setLoading(true);
     try {
       const res = await fetch("/api/signin", {
         method: "POST",
@@ -30,16 +31,18 @@ export default function SigninPage() {
         setError(data.error || "Sign-in failed");
       } else {
         localStorage.setItem("userId", data.userId);
+        localStorage.setItem("userEmail", data.email || form.email);
         router.push("/");
       }
-    } catch {
+    } catch (err) {
+      console.error("Signup error:", err);
       setError("Server error");
     }
   };
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <main className="min-h-screen flex items-center justify-center bg-background text-foreground px-4">
         <div className="w-full max-w-md p-6 bg-card text-card-foreground border border-border rounded-lg shadow-md">
           <h2 className="text-2xl font-bold mb-6 text-center">Welcome Back</h2>
@@ -62,14 +65,15 @@ export default function SigninPage() {
             <button
               type="submit"
               className="w-full bg-primary text-primary-foreground py-2 rounded font-semibold hover:opacity-90 transition"
+              disabled={!form.email || !form.password || loading}
             >
-              Sign In
+              {/* Sign In */}
+              {loading ? "signing in..." : "Sign In"}
             </button>
-            <ThemeButton />
           </form>
         </div>
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }
