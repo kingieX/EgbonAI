@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import { useAuth } from "@/context/AuthContext";
 
 type SentimentResult = {
   id: string;
@@ -12,19 +13,27 @@ type SentimentResult = {
 };
 
 export default function HistoryPage() {
+  const { userId } = useAuth();
+
   const router = useRouter();
-  const [userId, setUserId] = useState<string | null>(null);
+  // const [userId, setUserId] = useState<string | null>(null);
   const [results, setResults] = useState<SentimentResult[]>([]);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const uid = localStorage.getItem("userId");
+    // const uid = localStorage.getItem("userId");
+    // if (!uid) {
+    //   router.push("/signin");
+    //   return;
+    // }
+
+    // setUserId(uid);
+
+    const uid = userId;
     if (!uid) {
       router.push("/signin");
       return;
     }
-
-    setUserId(uid);
 
     fetch("/api/history", {
       method: "POST",
@@ -40,7 +49,7 @@ export default function HistoryPage() {
         console.error(err);
         setError("Failed to load history");
       });
-  }, []);
+  }, [userId, router]);
 
   const handleDelete = async (id: string) => {
     try {

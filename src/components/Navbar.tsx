@@ -1,21 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import ThemeToggleIcon from "./ThemeToggleIcon";
 import LogoutButton from "./LogoutButton";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Navbar() {
-  const [userId, setUserId] = useState<string | null>(null);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
+  // const [userId, setUserId] = useState<string | null>(null);
+  // const [userEmail, setUserEmail] = useState<string | null>(null);
+  const { userId, userEmail } = useAuth();
 
-  useEffect(() => {
-    const id = localStorage.getItem("userId");
-    const email = localStorage.getItem("userEmail"); // optional
-    if (id) setUserId(id);
-    if (email) setUserEmail(email);
-    // console.log("Navbar userId:", id, "userEmail:", email);
-  }, []);
+  // useEffect(() => {
+  //   const id = localStorage.getItem("userId");
+  //   const email = localStorage.getItem("userEmail"); // optional
+  //   if (id) setUserId(id);
+  //   if (email) setUserEmail(email);
+  //   // console.log("Navbar userId:", id, "userEmail:", email);
+  // }, []);
 
   return (
     <nav className="w-full border-b border-border bg-background text-foreground">

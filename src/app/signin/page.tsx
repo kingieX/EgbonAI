@@ -2,10 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 // import Navbar from "@/components/Navbar";
 // import Footer from "@/components/Footer";
 
 export default function SigninPage() {
+  const { login } = useAuth();
+
   const router = useRouter();
   const [form, setForm] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
@@ -30,8 +33,9 @@ export default function SigninPage() {
       if (!res.ok) {
         setError(data.error || "Sign-in failed");
       } else {
-        localStorage.setItem("userId", data.userId);
-        localStorage.setItem("userEmail", data.email || form.email);
+        // localStorage.setItem("userId", data.userId);
+        // localStorage.setItem("userEmail", data.email || form.email);
+        login(data.userId, form.email); // 👈 updates context + localStorage
         router.push("/");
       }
     } catch (err) {
