@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
 import { useAuth } from "@/context/AuthContext";
+import toast from "react-hot-toast";
+import { Trash2 } from "lucide-react";
 
 type SentimentResult = {
   id: string;
@@ -62,9 +64,11 @@ export default function HistoryPage() {
       const data = await res.json();
       if (!data.success) throw new Error(data.error);
       setResults(results.filter((r) => r.id !== id));
+      toast.success("Entry deleted successfully!");
     } catch (err) {
       console.error("Failed to delete item:", err);
       alert("Failed to delete this entry.");
+      toast.error("Failed to delete this entry.");
     }
   };
 
@@ -105,66 +109,68 @@ export default function HistoryPage() {
           </div>
         )}
 
-        {results.length > 0 && (
-          <div className="w-full h-[250px] mb-8">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  dataKey="value"
-                  nameKey="name"
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  fill="#8884d8"
-                  label
-                >
-                  {pieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        )}
+        <div className="">
+          {results.length > 0 && (
+            <div className="w-full h-[200px] mb-4">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    dataKey="value"
+                    nameKey="name"
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    fill="#8884d8"
+                    label
+                  >
+                    {pieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          )}
 
-        {results.length === 0 ? (
-          <p className="text-muted-foreground">No sentiment history found.</p>
-        ) : (
-          <ul className="space-y-4">
-            {results.map((entry) => (
-              <li
-                key={entry.id}
-                className="p-4 border border-border bg-card rounded text-card-foreground"
-              >
-                <div className="text-sm mb-1 text-muted-foreground">
-                  {new Date(entry.created_at).toLocaleString()}
-                </div>
-                <p className="mb-2">{entry.text}</p>
-                <div className="flex items-center justify-between">
-                  <span
-                    className={`text-sm font-bold ${
-                      entry.sentiment === "positive"
-                        ? "text-green-600"
-                        : entry.sentiment === "negative"
-                        ? "text-red-600"
-                        : "text-yellow-500"
-                    }`}
-                  >
-                    {entry.sentiment.toUpperCase()}
-                  </span>
-                  <button
-                    onClick={() => handleDelete(entry.id)}
-                    className="text-xs text-destructive hover:underline"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
+          {results.length === 0 ? (
+            <p className="text-muted-foreground">No sentiment history found.</p>
+          ) : (
+            <ul className="space-y-4">
+              {results.map((entry) => (
+                <li
+                  key={entry.id}
+                  className="p-4 border border-border bg-card rounded text-card-foreground"
+                >
+                  <div className="text-sm mb-1 text-muted-foreground">
+                    {new Date(entry.created_at).toLocaleString()}
+                  </div>
+                  <p className="mb-2">{entry.text}</p>
+                  <div className="flex items-center justify-between">
+                    <span
+                      className={`text-sm font-bold ${
+                        entry.sentiment === "positive"
+                          ? "text-green-600"
+                          : entry.sentiment === "negative"
+                          ? "text-red-600"
+                          : "text-yellow-500"
+                      }`}
+                    >
+                      {entry.sentiment.toUpperCase()}
+                    </span>
+                    <button
+                      onClick={() => handleDelete(entry.id)}
+                      className="text-xs text-destructive cursor-pointer"
+                    >
+                      <Trash2 className="inline-block ml-1" />
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
     </main>
   );

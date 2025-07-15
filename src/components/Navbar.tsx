@@ -1,23 +1,18 @@
 "use client";
 
 import Link from "next/link";
-// import { useEffect, useState } from "react";
 import ThemeToggleIcon from "./ThemeToggleIcon";
 import LogoutButton from "./LogoutButton";
 import { useAuth } from "@/context/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Navbar() {
-  // const [userId, setUserId] = useState<string | null>(null);
-  // const [userEmail, setUserEmail] = useState<string | null>(null);
   const { userId, userEmail } = useAuth();
-
-  // useEffect(() => {
-  //   const id = localStorage.getItem("userId");
-  //   const email = localStorage.getItem("userEmail"); // optional
-  //   if (id) setUserId(id);
-  //   if (email) setUserEmail(email);
-  //   // console.log("Navbar userId:", id, "userEmail:", email);
-  // }, []);
 
   return (
     <nav className="w-full border-b border-border bg-background text-foreground">
@@ -26,32 +21,41 @@ export default function Navbar() {
           EgbónAI
         </Link>
 
-        <div className="flex items-center gap-4 text-sm">
-          <ThemeToggleIcon />
+        <div className="flex items-center gap-2 text-sm">
+          <Link href="/" className="px-2 py-2 hover:bg-muted transition">
+            Home
+          </Link>
 
           {userId ? (
-            <div className="relative group">
-              <div className="w-9 h-9 rounded-full bg-muted text-muted-foreground flex items-center justify-center cursor-pointer">
-                {userEmail?.charAt(0).toUpperCase() || "U"}
-              </div>
-              <div className="absolute right-0 mt-2 hidden group-hover:flex flex-col w-40 bg-card border border-border rounded shadow text-sm z-10">
-                <span className="px-4 py-2 border-b border-border">
-                  {userEmail}
-                </span>
-                <Link
-                  href="/history"
-                  className="px-4 py-2 hover:bg-muted transition"
-                >
-                  History
-                </Link>
-                <Link
-                  href="/profile"
-                  className="px-4 py-2 hover:bg-muted transition"
-                >
-                  Profile
-                </Link>
-                <LogoutButton />
-              </div>
+            <div className="flex items-center gap-2">
+              <Link
+                href="/history"
+                className="px-2 py-2 hover:bg-muted transition"
+              >
+                History
+              </Link>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  {/* <Button variant="outline">Open</Button> */}
+                  <div className="w-9 h-9 rounded-full bg-muted text-muted-foreground flex items-center justify-center cursor-pointer">
+                    {userEmail?.charAt(0).toUpperCase() || "U"}
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                  <DropdownMenuItem variant="default">
+                    <Link
+                      href="/profile"
+                      className="w-full px-3 py-2 hover:bg-muted transition"
+                    >
+                      Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem variant="destructive">
+                    <LogoutButton />
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           ) : (
             <>
@@ -63,6 +67,7 @@ export default function Navbar() {
               </Link>
             </>
           )}
+          <ThemeToggleIcon />
         </div>
       </div>
     </nav>

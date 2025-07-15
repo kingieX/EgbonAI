@@ -38,7 +38,7 @@ Post:
       .replace(/```$/, "") // remove ending ```
       .trim();
 
-    console.log("Result: ", cleaned);
+    // console.log("Result: ", cleaned);
 
     let parsed;
     try {

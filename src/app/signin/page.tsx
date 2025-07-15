@@ -44,6 +44,8 @@ export default function SigninPage() {
     } catch (err) {
       console.error("Signup error:", err);
       setError("Server error");
+    } finally {
+      setLoading(false);
     }
   };
 

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import Link from "next/link";
 // import Footer from "@/components/Footer";
 // import Navbar from "@/components/Navbar";
 import { useEffect, useState } from "react";
@@ -89,9 +90,9 @@ export default function HomePage() {
             ) : (
               <span className="text-sm text-muted-foreground">
                 Using temporary session –{" "}
-                <a href="/signin" className="text-primary underline">
+                <Link href="/signin" className="text-primary underline">
                   Sign in
-                </a>{" "}
+                </Link>{" "}
                 to save history
               </span>
             )}

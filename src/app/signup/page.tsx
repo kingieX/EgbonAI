@@ -44,6 +44,7 @@ export default function SignupPage() {
     } catch (err) {
       console.error("Signup error:", err);
       setError("Server error");
+      toast.error("Server error,");
     } finally {
       setLoading(false);
     }
