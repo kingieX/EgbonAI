@@ -9,7 +9,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing ID" }, { status: 400 });
     }
 
-    db.prepare("DELETE FROM sentiment_results WHERE id = ?").run(id);
+    console.log("Delete request ID:", id);
+
+    try {
+      const result = db
+        .prepare("DELETE FROM sentiment_results WHERE id = ?")
+        .run(id);
+
+      console.log("Delete result:", result);
+    } catch (e) {
+      console.error("Delete DB error:", e);
+      return NextResponse.json({ error: "Delete failed" }, { status: 500 });
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {

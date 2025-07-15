@@ -13,12 +13,19 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    console.log("Log request:", { userId, text, sentiment });
+
     const id = randomUUID();
 
-    db.prepare(
-      `INSERT INTO sentiment_results (id, user_id, text_content, sentiment)
-   VALUES (?, ?, ?, ?)`
-    ).run(id, userId, text, sentiment);
+    try {
+      db.prepare(
+        `INSERT INTO sentiment_results (id, user_id, text_content, sentiment)
+     VALUES (?, ?, ?, ?)`
+      ).run(id, userId, text, sentiment);
+    } catch (e) {
+      console.error("DB insert error:", e);
+      return NextResponse.json({ error: "DB insert failed" }, { status: 500 });
+    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
