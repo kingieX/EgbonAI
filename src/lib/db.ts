@@ -27,13 +27,13 @@ db.exec(`
   );
 
   CREATE TABLE IF NOT EXISTS sentiment_results (
-    id TEXT PRIMARY KEY,
-    user_id TEXT NOT NULL,
-    text_content TEXT NOT NULL,
-    sentiment TEXT NOT NULL,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY(user_id) REFERENCES users(id)
-  );
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL,
+  text_content TEXT NOT NULL,
+  sentiment TEXT NOT NULL,
+  timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(user_id) REFERENCES users(id)
+);
 `);
 
 export default db;
