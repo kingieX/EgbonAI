@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import toast from "react-hot-toast";
 // import Navbar from "@/components/Navbar";
 // import Footer from "@/components/Footer";
 
@@ -32,10 +33,12 @@ export default function SigninPage() {
       const data = await res.json();
       if (!res.ok) {
         setError(data.error || "Sign-in failed");
+        toast.error(data.error || "Sign-in failed");
       } else {
         // localStorage.setItem("userId", data.userId);
         // localStorage.setItem("userEmail", data.email || form.email);
         login(data.userId, form.email); // 👈 updates context + localStorage
+        toast.success("Logged in successfully!");
         router.push("/");
       }
     } catch (err) {

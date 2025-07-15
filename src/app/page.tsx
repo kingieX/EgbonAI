@@ -4,6 +4,7 @@
 // import Footer from "@/components/Footer";
 // import Navbar from "@/components/Navbar";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 type SentimentResult = {
   sentiment: "positive" | "neutral" | "negative";
@@ -42,20 +43,31 @@ export default function HomePage() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Analysis failed");
+      if (!res.ok) {
+        // throw new Error(data.error || "Analysis failed");
+        setError(data.error || "Analysis failed");
+        toast.error(data.error || "Analysis failed");
+      }
       setResult(data);
 
       if (userId) {
         // Log the result only for authenticated users
-        await fetch("/api/log", {
+        const res = await fetch("/api/log", {
           method: "POST",
           body: JSON.stringify({ userId, text, sentiment: data.sentiment }),
           headers: { "Content-Type": "application/json" },
         });
-        alert("Sentiment logged successfully");
+        const result = await res.json();
+        if (!res.ok) {
+          // throw new Error(result.error || "Logging failed");
+          setError(result.error || "Logging failed");
+          toast.error(result.error || "Logging failed");
+        }
+        toast.success("Sentiment logged successfully");
       }
     } catch (err: any) {
       setError(err.message || "Unexpected error");
+      toast.error(err.message || "Unexpected error");
     } finally {
       setLoading(false);
     }
