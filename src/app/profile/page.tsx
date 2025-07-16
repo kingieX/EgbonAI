@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
@@ -212,6 +213,101 @@ export default function ProfilePage() {
                 className="bg-primary text-primary-foreground px-4 py-2 rounded hover:opacity-80 transition text-sm"
               >
                 Save Changes
+              </button>
+            </form>
+          </div>
+        )}
+
+        {user && (
+          <div className="mt-10 bg-card border border-border p-4 rounded text-card-foreground">
+            <h3 className="text-lg font-semibold mb-4">🔐 Change Password</h3>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                const form = e.currentTarget;
+                const formData = new FormData(form);
+
+                const currentPassword = formData.get(
+                  "currentPassword"
+                ) as string;
+                const newPassword = formData.get("newPassword") as string;
+                const confirmPassword = formData.get(
+                  "confirmPassword"
+                ) as string;
+
+                if (newPassword !== confirmPassword) {
+                  toast.error("New passwords do not match");
+                  return;
+                }
+
+                if (
+                  newPassword.length < 8 ||
+                  !/\d/.test(newPassword) ||
+                  !/[A-Z]/.test(newPassword)
+                ) {
+                  toast.error(
+                    "Password must be at least 8 characters long and include a number and uppercase letter"
+                  );
+                  return;
+                }
+
+                try {
+                  const res = await fetch("/api/profile/password", {
+                    method: "POST",
+                    body: JSON.stringify({
+                      userId: user.id,
+                      currentPassword,
+                      newPassword,
+                    }),
+                    headers: { "Content-Type": "application/json" },
+                  });
+
+                  const data = await res.json();
+                  if (!res.ok) throw new Error(data.error);
+
+                  toast.success("Password updated successfully");
+                  form.reset();
+                } catch (err: any) {
+                  toast.error(err?.message || "Failed to update password");
+                  console.error(err);
+                }
+              }}
+              className="space-y-4"
+            >
+              <div>
+                <label className="block text-sm mb-1">Current Password</label>
+                <input
+                  type="password"
+                  name="currentPassword"
+                  required
+                  className="w-full p-2 border border-border rounded bg-input text-foreground"
+                />
+              </div>
+              <div>
+                <label className="block text-sm mb-1">New Password</label>
+                <input
+                  type="password"
+                  name="newPassword"
+                  required
+                  className="w-full p-2 border border-border rounded bg-input text-foreground"
+                />
+              </div>
+              <div>
+                <label className="block text-sm mb-1">
+                  Confirm New Password
+                </label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  required
+                  className="w-full p-2 border border-border rounded bg-input text-foreground"
+                />
+              </div>
+              <button
+                type="submit"
+                className="bg-primary text-primary-foreground px-4 py-2 rounded hover:opacity-80 transition text-sm"
+              >
+                Update Password
               </button>
             </form>
           </div>
