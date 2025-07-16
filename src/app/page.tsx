@@ -81,8 +81,8 @@ export default function HomePage() {
         <div className="w-full max-w-2xl">
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-bold text-primary">
-              {/* EgbónAI Analyzer */}
-              Senticore Analyzer
+              EgbónAI Analyzer
+              {/* Senticore Analyzer */}
             </h1>
             {userId ? (
               <span className="text-sm text-muted-foreground">
