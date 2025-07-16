@@ -18,7 +18,8 @@ export default function Navbar() {
     <nav className="w-full border-b border-border bg-background text-foreground">
       <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="text-lg font-bold text-primary">
-          EgbónAI
+          {/* EgbónAI */}
+          Senticore
         </Link>
 
         <div className="flex items-center gap-2 text-sm">
